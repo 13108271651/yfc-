@@ -18,7 +18,7 @@ headers=['Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like G
 
         "Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5"]
 
-def jiexi(url):
+def analysis(url):#传入一个章节网址传回下一章网址
 
     html = requests.get(url, headers={'User-Agent':random.choice(headers)})
     html.encoding = ('utf-8')
@@ -29,7 +29,7 @@ def jiexi(url):
     return url_next
 
 
-def huoqu(url):
+def obtain(url):#传入网址返回小说内容
 
     try:
         html = requests.get(url, headers={'User-Agent':random.choice(headers)})
@@ -49,7 +49,7 @@ def huoqu(url):
         txt_zong=['不要滥用']
         return txt_zong
 
-def main():
+def main():#写入文件函数
     url=input('请输入小说的起始网页')
     name=input('请输入你要获取的小说名或者文件保存名，不带文件格式后缀')
     name=name+'.txt'
@@ -57,21 +57,21 @@ def main():
     if number>0:
         for i in range(number):
             with open(name,'a+',encoding="utf-8") as w:
-                w.write(huoqu(url))
+                w.write(obtain(url))
                 print(f'写入从起始章开始第{i}章')
-            url=jiexi(url)
+            url=analysis(url)
 
         print('已经抓取到最新章节')
         input()
     else:
         x=1
         while 1:
-            txt=huoqu(url)
+            txt=obtain(url)
             if len(txt)>50:
                 with open(name, 'a+',encoding="utf-8") as w:
                     w.write(txt+'\n\n\n\n\n')
                     print(f'写入从起始章开始第{x}章')
-                url = jiexi(url)
+                url = analysis(url)
                 x+=1
             else:
                 print('已经抓取到最新章节')
